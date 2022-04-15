@@ -17,19 +17,21 @@ def checkIfPossible(bannedId, userId) :
 
 possibleArr = [];
 def dfs(user_id, banned_id, arr, level) :
+    arr = copy.deepcopy(arr);
     if level == lenBanned_id :
         arr.sort();
         if arr not in possibleArr :
             possibleArr.append(arr);
         return;
     bId = banned_id[level];
+    tUser_id = copy.deepcopy(user_id);
     for uId in user_id :
         if checkIfPossible(bId, uId) :
-            tUser_id = copy.deepcopy(user_id);
             tUser_id.remove(uId);
-            tArr = copy.deepcopy(arr);
-            tArr.append(uId);
-            dfs(tUser_id, banned_id, tArr, level + 1);
+            arr.append(uId);
+            dfs(tUser_id, banned_id, arr, level + 1);
+            arr.pop();
+            tUser_id.append(uId);
 
 
 
