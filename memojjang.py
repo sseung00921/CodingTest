@@ -1,9 +1,21 @@
-n = int(input());
-d = [0] * (n + 1);
-d[1] = 1;
-d[2] = 3;
-for i in range(3, n + 1) :
-    d[i] = 2*d[i - 2]%796796 + d[i - 1]%796796;
+n, m = map(int, input().split());
+kind = [];
+d = [-1] * (m + 1);
 
-print(d[n]);
+for _ in range(n) :
+    danwi = int(input());
+    kind.append(danwi);
+    if danwi <= m :
+        d[danwi] = 1;
 
+for i in range(1, m + 1) :
+    for danwi in kind :
+        if i - danwi < 0 :
+            continue;
+        if d[i - danwi] == -1 :
+            continue;
+        if d[i] == -1 :
+            d[i] = d[i - danwi] + 1;
+        else :
+            d[i] = min(d[i - danwi] + 1, d[i]);
+print(d[m]);
