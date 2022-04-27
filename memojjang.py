@@ -1,25 +1,28 @@
-def solution(N, stages):
-    answer = []
-    d = [0] * (N + 2);
-    for stage in stages :
-        d[stage] += 1;
+n, m = map(int, input().split());
+parents = [0] * (n + 1);
 
-    for i in range(1, N + 1) :
-        if sum(d[i : ]) == 0 :
-            failRate = 0;
-            answer.append((failRate, i));
-            continue;
-        failRate = d[i] / sum(d[i : ]);
-        answer.append((failRate, i));
+def findParent(parents, x) :
+    if parents[x] != x :
+        parents[x] = findParent(parents, parents[x]);
+    return parents[x];
 
-    answer.sort(key=lambda s: (-s[0], s[1]));
-    nAnswer = [];
-    for tuple in answer :
-        stage = tuple[1];
-        nAnswer.append(stage);
+def unionParent(parents, a, b) :
+    a = findParent(parents, a);
+    b = findParent(parents, b);
+    if b < a :
+        parents[a] = b;
+    else:
+        parents[b] = a;
 
-    return nAnswer;
+for i in range(n + 1) :
+    parents[i] = i;
 
-N = 5;
-stages = [2, 1, 2, 6, 2, 4, 3, 3];
-print(solution(N, stages));
+for _ in range(m) :
+    cmd, a, b = map(int, input().split());
+    if cmd == 0 :
+        unionParent(parents, a, b);
+    elif cmd == 1 :
+        if findParent(parents, a) == findParent(parents, b) :
+            print("YES");
+        else :
+            print("NO");
