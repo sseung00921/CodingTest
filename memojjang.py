@@ -1,5 +1,9 @@
+from collections import deque;
+
 n, m = map(int, input().split());
 parents = [0] * (n + 1);
+for i in range(1, n + 1) :
+    parents[i] = i;
 
 def findParent(parents, x) :
     if parents[x] != x :
@@ -9,20 +13,28 @@ def findParent(parents, x) :
 def unionParent(parents, a, b) :
     a = findParent(parents, a);
     b = findParent(parents, b);
-    if b < a :
-        parents[a] = b;
-    else:
-        parents[b] = a;
+    if a < b :
+        parents[b] = parents[a];
+    else :
+        parents[a] = parents[b];
 
-for i in range(n + 1) :
-    parents[i] = i;
-
+roads = [];
 for _ in range(m) :
-    cmd, a, b = map(int, input().split());
-    if cmd == 0 :
+    a, b, cost = map(int, input().split());
+    roads.append((cost, a, b));
+
+roads.sort();
+
+totalCost = 0;
+maxCost = 0;
+q = deque(roads);
+while q :
+    cost, a, b = q.popleft();
+    if findParent(parents, a) == findParent(parents, b) :
+        continue;
+    else :
         unionParent(parents, a, b);
-    elif cmd == 1 :
-        if findParent(parents, a) == findParent(parents, b) :
-            print("YES");
-        else :
-            print("NO");
+        totalCost += cost;
+        maxCost = max(maxCost, cost);
+
+print(totalCost - maxCost);
