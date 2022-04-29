@@ -1,40 +1,39 @@
 from collections import deque;
 
-n, m = map(int, input().split());
-parents = [0] * (n + 1);
+n = int(input());
+d = [0] * (n + 1);
+times = [0] * (n + 1);
+degree = [0] * (n + 1);
+graph = [[] for _ in range(n + 1)];
+for i in range(n) :
+    data = list(map(int, input().split()));
+    times[i + 1] = data[0];
+    d[i + 1] = data[0];
+    for j in range(1, len(data)) :
+        if data[j] == -1 :
+            break;
+        graph[data[j]].append(i + 1);
+        degree[i + 1] += 1;
+
+q = deque([])
 for i in range(1, n + 1) :
-    parents[i] = i;
+    if degree[i] == 0 :
+        q.append((i));
 
-def findParent(parents, x) :
-    if parents[x] != x :
-        parents[x] = findParent(parents, parents[x]);
-    return parents[x];
-
-def unionParent(parents, a, b) :
-    a = findParent(parents, a);
-    b = findParent(parents, b);
-    if a < b :
-        parents[b] = parents[a];
-    else :
-        parents[a] = parents[b];
-
-roads = [];
-for _ in range(m) :
-    a, b, cost = map(int, input().split());
-    roads.append((cost, a, b));
-
-roads.sort();
-
-totalCost = 0;
-maxCost = 0;
-q = deque(roads);
 while q :
-    cost, a, b = q.popleft();
-    if findParent(parents, a) == findParent(parents, b) :
-        continue;
-    else :
-        unionParent(parents, a, b);
-        totalCost += cost;
-        maxCost = max(maxCost, cost);
+    now = q.popleft();
+    for i in graph[now] :
+        d[i] = max(d[i], d[now] + times[i]);
+        degree[i] -= 1;
+        if degree[i] == 0 :
+            q.append(i);
 
-print(totalCost - maxCost);
+for i in range(1, n + 1) :
+    print(d[i]);
+
+#5
+#10 -1
+#10 1 -1
+#4 1 -1
+#4 3 1 -1
+#3 3 -1
