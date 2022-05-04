@@ -1,20 +1,11 @@
-s = input();
+n = int(input());
+data = list(map(int, input().split()));
+data.sort();
+checkIfCanBeMade = 1;
 
-zeroCnt = 0;
-oneCnt = 0;
+for coin in data :
+    if checkIfCanBeMade < coin :
+        break;
+    checkIfCanBeMade += coin;
 
-for i in range(1, len(s)) :
-    if s[i - 1] == s[i] :
-        continue;
-    else :
-        if s[i - 1] == '0' :
-            zeroCnt += 1;
-        else :
-            oneCnt += 1;
-
-if s[-1] == '0' :
-    zeroCnt += 1;
-else :
-    oneCnt += 1;
-
-print(min(zeroCnt, oneCnt));
+print(checkIfCanBeMade);
