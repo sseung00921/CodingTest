@@ -1,22 +1,10 @@
-from collections import deque;
+import bisect;
 
-SIGNAL = deque([1,2,1,2,3,5]);
-K = 5;
+arr = [];
+bisect.insort(arr, (5,1));
+bisect.insort(arr, (4,2));
+bisect.insort(arr, (3,3));
+bisect.insort(arr, (2,4));
+bisect.insort(arr, (1,5));
 
-def check() :
-    subSignal = deque([]);
-    rtnCnt = 0;
-
-    sum = 0;
-    while SIGNAL:
-        e = SIGNAL.popleft();
-        sum += e;
-        subSignal.append(e);
-        if sum > K :
-            mLeft = subSignal.popleft();
-            sum -= mLeft;
-        if sum == K :
-            rtnCnt += 1;
-    return rtnCnt;
-
-print(check());
+print(arr);
