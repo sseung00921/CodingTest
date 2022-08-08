@@ -1,23 +1,22 @@
-from collections import deque;
+mapper = {};
 
 n = int(input());
-wannaBe = [];
-for _ in range(n) :
-    wannaBe.append(int(input()));
+data = list(map(int, input().split()));
 
-idx = 0;
-stack = deque([]);
-ops = [];
-for i in range(1, n + 1) :
-    stack.append(i);
-    ops.append('+')
-    while len(stack) > 0  and stack[-1] == wannaBe[idx] :
-        stack.pop();
-        ops.append("-");
-        idx += 1;
+m = int(input());
+toCheckList = list(map(int, input().split()));
 
-if len(stack) == 0 :
-    for op in ops :
-        print(op);
-else :
-    print("NO");
+for num in data :
+    if num in mapper :
+        mapper[num] += 1;
+    else :
+        mapper[num] = 1;
+
+answerArr = [];
+for toCheck in toCheckList :
+    if toCheck in mapper :
+        answerArr.append(mapper[toCheck]);
+    else :
+        answerArr.append(0);
+
+print(*answerArr);
