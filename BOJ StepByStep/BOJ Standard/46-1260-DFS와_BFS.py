@@ -47,3 +47,39 @@ bfs(start)
 
 print(*DFSArr);
 print(*BFSArr);
+
+#------------2차원 0/1 보드 버전--------------------------
+from collections import deque;
+
+R = 0; C = 0;
+dr = [-1,0,1,0];
+dc = [0,1,0,-1];
+
+Board = None;
+IsVisited = None;
+
+def bfs(sr, sc, scost) :
+    q = deque([]);
+    q.append((sr, sc, scost));
+    while q :
+        nowr, nowc, nowCost = q.popleft();
+        if nowr == R - 1 and nowc == C - 1 :
+            return nowCost;
+        for dir in range(4) :
+            nr = nowr + dr[dir];
+            nc = nowc + dc[dir];
+            if nr < 0 or nc < 0 or nr >= R or nc >= C :
+                continue;
+            if Board[nr][nc] == '0' and IsVisited[nr][nc] == False :
+                IsVisited[nr][nc] = True;
+                q.append((nr, nc, nowCost + 1));
+    return -1;
+
+r, c = map(int, input().split());
+R = r; C = c;
+Board = [];
+for _ in range(r) :
+    Board.append(input());
+IsVisited = [[False] * c for _ in range(r)];
+
+print(bfs(0, 0, 1));

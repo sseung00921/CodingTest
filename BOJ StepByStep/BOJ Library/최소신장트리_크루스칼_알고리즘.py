@@ -36,6 +36,3 @@ for edge in edges :
         sum += cost;
 
 print(sum);
-
-
-
