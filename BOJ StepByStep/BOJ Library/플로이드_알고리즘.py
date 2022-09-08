@@ -20,9 +20,4 @@ for k in range(1, n + 1) :
             Graph[i][j] = min(Graph[i][j], Graph[i][k] + Graph[k][j]);
 
 for i in range(1, n + 1) :
-    for j in range(1, n + 1) :
-        if Graph[i][j] == INF :
-            Graph[i][j] = 0;
-
-for i in range(1, n + 1) :
     print(*Graph[i][1 : ]);
