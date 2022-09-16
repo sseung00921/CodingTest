@@ -1,28 +1,35 @@
 import sys;
-INF = int(1e9);
-n = int(sys.stdin.readline());
-m = int(sys.stdin.readline());
+input = sys.stdin.readline;
 
-Graph = [[INF] * (n + 1) for _ in range(n + 1)];
+n, m = map(int, input().split());
+Board = [[0] * m for _ in range(n)];
+d = [[-1] * m for _ in range(n)];
 
-for _ in range(m) :
-    a, b, cost = map(int, sys.stdin.readline().split());
-    Graph[a][b] = min(Graph[a][b], cost);
+dr = [-1,0,1,0];
+dc = [0,1,0,-1];
+for i in range(n) :
+    data = list(map(int, input().split()));
+    for j in range(len(data)) :
+        Board[i][j] = data[j];
 
-for i in range(1, n + 1) :
-    for j in range(1, n + 1) :
-        if i == j :
-            Graph[i][j] = 0;
+def dfs(r, c) :
+    if r == n - 1 and c == m - 1 :
+        return 1;
 
-for k in range(1, n + 1) :
-    for i in range(1, n + 1) :
-        for j in range(1, n + 1) :
-            Graph[i][j] = min(Graph[i][j], Graph[i][k] + Graph[k][j]);
+    if d[r][c] != -1 :
+        return d[r][c];
 
-for i in range(1, n + 1) :
-    for j in range(1, n + 1) :
-        if Graph[i][j] == INF :
-            Graph[i][j] = 0;
+    ways = 0;
+    for dir in range(4) :
+        nr = r + dr[dir];
+        nc = c + dc[dir];
+        if nr < 0 or nr >= n or nc < 0 or nc >= m :
+            continue;
+        if Board[nr][nc] < Board[r][c] :
+            ways += dfs(nr, nc);
 
-for i in range(1, n + 1) :
-    print(*Graph[i][1 : ]);
+    d[r][c] = ways;
+    return d[r][c];
+
+
+print(dfs(0,0));
