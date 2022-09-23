@@ -1,35 +1,63 @@
-import sys;
+import sys
+import heapq;
+
+INF = int(1e9);
 input = sys.stdin.readline;
 
-n, m = map(int, input().split());
-Board = [[0] * m for _ in range(n)];
-d = [[-1] * m for _ in range(n)];
+v, e = map(int, input().split())
+graph = [[] for _ in range(v + 1)];
+d = [INF] * (v + 1);
+d2 = [INF] * (v + 1);
+d3 = [INF] * (v + 1);
+for _ in range(e) :
+    a, b, c = map(int, input().split());
+    graph[a].append((c, b));
+    graph[b].append((c, a));
 
-dr = [-1,0,1,0];
-dc = [0,1,0,-1];
-for i in range(n) :
-    data = list(map(int, input().split()));
-    for j in range(len(data)) :
-        Board[i][j] = data[j];
+mid1, mid2 = map(int, input().split());
 
-def dfs(r, c) :
-    if r == n - 1 and c == m - 1 :
-        return 1;
+d[1] = 0;
+q = [(0, 1)];
 
-    if d[r][c] != -1 :
-        return d[r][c];
+while q :
+    dist, now = heapq.heappop(q);
+    if dist > d[now] :
+        continue;
+    for i in graph[now] :
+        nDist = d[now] + i[0];
+        if nDist < d[i[1]] :
+            d[i[1]] = nDist;
+            heapq.heappush(q, (nDist, i[1]));
 
-    ways = 0;
-    for dir in range(4) :
-        nr = r + dr[dir];
-        nc = c + dc[dir];
-        if nr < 0 or nr >= n or nc < 0 or nc >= m :
-            continue;
-        if Board[nr][nc] < Board[r][c] :
-            ways += dfs(nr, nc);
+d2[mid1] = 0;
+q = [(0, mid1)];
 
-    d[r][c] = ways;
-    return d[r][c];
+while q :
+    dist, now = heapq.heappop(q);
+    if dist > d2[now] :
+        continue;
+    for i in graph[now] :
+        nDist = d2[now] + i[0];
+        if nDist < d2[i[1]] :
+            d2[i[1]] = nDist;
+            heapq.heappush(q, (nDist, i[1]));
 
+d3[mid2] = 0;
+q = [(0, mid2)];
 
-print(dfs(0,0));
+while q :
+    dist, now = heapq.heappop(q);
+    if dist > d3[now] :
+        continue;
+    for i in graph[now] :
+        nDist = d3[now] + i[0];
+        if nDist < d3[i[1]] :
+            d3[i[1]] = nDist;
+            heapq.heappush(q, (nDist, i[1]));
+
+hubo1 = d[mid1] + d2[mid2] + d3[v];
+hubo2 = d[mid2] + d3[mid1] + d2[v];
+answer = min(hubo1, hubo2);
+if answer >= int(1e9) :
+    answer = -1;
+print(answer);
