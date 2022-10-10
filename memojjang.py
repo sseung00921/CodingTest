@@ -1,25 +1,23 @@
 import sys;
 input = sys.stdin.readline;
-n = int(input());
-data = list(map(int, input().split()));
 
-data.sort();
+n, m = map(int, input().split());
+A = [];
+for _ in range(n) :
+    A.append(list(map(int, input().split())));
+m, k = map(int, input().split());
+B = [];
+for _ in range(m) :
+    B.append(list(map(int, input().split())));
 
-Minn = int(1e9*3);
-answer = [];
+AB = [[0] * k for _ in range(n)];
 
-i = 0;
-j = n - 1;
-while i < j :
-    summ = data[i] + data[j];
-    if abs(summ) < Minn :
-        Minn = abs(summ);
-        answer = [data[i], data[j]];
-        if summ == 0 :
-            break;
-    if summ < 0 :
-        i += 1;
-    elif summ > 0 :
-        j -= 1;
+for i in range(n) :
+    for j in range(k) :
+        e = 0;
+        for l in range(m) :
+            e += A[i][l]*B[l][j];
+        AB[i][j] = e;
 
-print(*answer);
+for i in range(len(AB)) :
+    print(*AB[i]);
