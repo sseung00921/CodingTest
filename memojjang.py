@@ -1,27 +1,19 @@
+from collections import deque;
+
 import sys;
 input = sys.stdin.readline;
-INF = int(1e9);
-n, m = map(int, input().split());
 
-Graph = [[INF] * (n + 1) for _ in range(n + 1)];
+n, l = map(int, input().split());
+data = list(map(int, input().split()));
 
-for _ in range(m) :
-    a, b, cost = map(int, sys.stdin.readline().split());
-    Graph[a][b] = min(Graph[a][b], cost);
+q = deque([]);
+answer = [];
+for i in range(n) :
+    while q and data[i] < q[-1][0] :
+        q.pop();
+    while q and i - l + 1 > q[0][1] :
+        q.popleft();
+    q.append((data[i], i));
+    answer.append(q[0][0]);
 
-for k in range(1, n + 1) :
-    for i in range(1, n + 1) :
-        for j in range(1, n + 1) :
-            Graph[i][j] = min(Graph[i][j], Graph[i][k] + Graph[k][j]);
-
-answer = INF;
-for i in range(1, n + 1) :
-    answer = min(answer, Graph[i][i]);
-
-if answer < INF :
-    print(answer);
-else:
-    print(-1);
-
-
-
+print(*answer);
