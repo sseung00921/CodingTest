@@ -1,53 +1,28 @@
 import sys;
-Input = sys.stdin.readline;
+input = sys.stdin.readline;
+s = ' ' + input().strip();
+l = len(s);
+d = [2500] * (l + 1);
+isPal = [[0] * (l + 1) for _ in range(l + 1)];
 
-n, m = map(int, input().split());
-poses = [];
-edges = [];
+for i in range(1, l) :
+    isPal[i][i] = 1;
 
-def find_parent(parent, x):
-    if parent[x] != x:
-        parent[x] = find_parent(parent, parent[x])
-    return parent[x]
+for i in range(2, l) :
+    if s[i - 1] == s[i] :
+        isPal[i - 1][i] = 1;
 
-def union_parent(parent, a, b):
-    a = find_parent(parent, a)
-    b = find_parent(parent, b)
-    if a < b:
-        parent[b] = a
-    else:
-        parent[a] = b
+for size in range(3, l) :
+    for start in range(l - size + 1) :
+        end = start + size - 1;
+        if s[start] == s[end] and isPal[start + 1][end - 1] :
+            isPal[start][end] = 1;
 
-def calDistance(i, j) :
-    x1, y1 = poses[i];
-    x2, y2 = poses[j];
-    return ((x1 - x2)**2 + (y1 - y2)**2)**(1/2);
+d[0] = 0;
+for end in range(1, l) :
+    d[end] = min(d[end], d[end - 1] + 1);
+    for start in range(1, end) :
+        if isPal[start][end] :
+            d[end] = min(d[end], d[start - 1] + 1);
 
-for _ in range(n) :
-    x, y = map(int, input().split());
-    poses.append((x, y));
-
-for _ in range(m) :
-    a, b = map(int, input().split())
-    edges.append((0, a, b));
-
-for i in range(n) :
-    for j in range(n) :
-        edges.append((calDistance(i, j), i + 1, j + 1));
-parent = [0] * (n + 1)
-
-for i in range(1, n + 1):
-    parent[i] = i
-
-edges.sort();
-
-sum = 0;
-for edge in edges :
-    cost, a, b = edge;
-    if find_parent(parent, a) == find_parent(parent, b) :
-        continue;
-    else:
-        union_parent(parent, a, b);
-        sum += cost;
-
-print(f'{round(sum,2):.2f}')
+print(d[l - 1]);
