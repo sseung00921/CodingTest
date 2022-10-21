@@ -1,28 +1,33 @@
 import sys;
+sys.setrecursionlimit(10**5);
 input = sys.stdin.readline;
-s = ' ' + input().strip();
-l = len(s);
-d = [2500] * (l + 1);
-isPal = [[0] * (l + 1) for _ in range(l + 1)];
 
-for i in range(1, l) :
-    isPal[i][i] = 1;
+MOD = 1000000003;
+N = int(input());
+k = int(input());
+d = [[-1] * (k + 1) for _ in range(N + 1)]
 
-for i in range(2, l) :
-    if s[i - 1] == s[i] :
-        isPal[i - 1][i] = 1;
+def dfs(n, k) :
+    if n < k :
+        d[n][k] = 0;
+        return 0;
 
-for size in range(3, l) :
-    for start in range(l - size + 1) :
-        end = start + size - 1;
-        if s[start] == s[end] and isPal[start + 1][end - 1] :
-            isPal[start][end] = 1;
+    if k == 1 :
+        d[n][k] = n;
+        return n;
 
-d[0] = 0;
-for end in range(1, l) :
-    d[end] = min(d[end], d[end - 1] + 1);
-    for start in range(1, end) :
-        if isPal[start][end] :
-            d[end] = min(d[end], d[start - 1] + 1);
+    if d[n][k] != -1 :
+        return d[n][k];
 
-print(d[l - 1]);
+    case1 = dfs(n - 1, k);
+    case2 = dfs(n - 2, k - 1);
+    d[n][k] = (case1 + case2) % MOD;
+
+    return d[n][k];
+
+answer = 0;
+if k == 1 :
+    answer = N;
+else :
+    answer = (dfs(N - 3, k - 1) + dfs(N - 1, k)) % MOD;
+print(answer);
