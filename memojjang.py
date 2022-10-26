@@ -1,33 +1,32 @@
 import sys;
-sys.setrecursionlimit(10**5);
 input = sys.stdin.readline;
 
-MOD = 1000000003;
-N = int(input());
-k = int(input());
-d = [[-1] * (k + 1) for _ in range(N + 1)]
+n, m = map(int, input().split());
+Board = [];
+for _ in range(n) :
+    Board.append(list(map(int, input().split())));
 
-def dfs(n, k) :
-    if n < k :
-        d[n][k] = 0;
-        return 0;
+d = [[-1] * m for _ in range(n)];
+dr = [-1,0,1,0];
+dc = [0,-1,0,1];
 
-    if k == 1 :
-        d[n][k] = n;
-        return n;
+def dfs(r, c) :
+    if r == n - 1 and c == m - 1 :
+        return 1;
 
-    if d[n][k] != -1 :
-        return d[n][k];
+    if d[r][c] != -1 :
+        return d[r][c];
 
-    case1 = dfs(n - 1, k);
-    case2 = dfs(n - 2, k - 1);
-    d[n][k] = (case1 + case2) % MOD;
+    summ = 0;
+    for dir in range(4) :
+        nr = r + dr[dir];
+        nc = c + dc[dir];
+        if nr < 0 or nr >= n or nc < 0 or nc >= m :
+            continue;
+        if Board[nr][nc] < Board[r][c] :
+            summ += dfs(nr, nc);
 
-    return d[n][k];
+    d[r][c] = summ;
+    return d[r][c];
 
-answer = 0;
-if k == 1 :
-    answer = N;
-else :
-    answer = (dfs(N - 3, k - 1) + dfs(N - 1, k)) % MOD;
-print(answer);
+print(dfs(0,0));
