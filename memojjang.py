@@ -1,32 +1,33 @@
 import sys;
 input = sys.stdin.readline;
 
-n, m = map(int, input().split());
-Board = [];
-for _ in range(n) :
-    Board.append(list(map(int, input().split())));
+T = input().rstrip();
+P = input().rstrip();
+pi = [0] * len(P);
 
-d = [[-1] * m for _ in range(n)];
-dr = [-1,0,1,0];
-dc = [0,-1,0,1];
+j = 0;
+for i in range(1, len(P)) :
+    while j > 0 and P[j] != P[i] :
+        j = pi[j - 1];
 
-def dfs(r, c) :
-    if r == n - 1 and c == m - 1 :
-        return 1;
+    if P[j] == P[i] :
+        j += 1;
+        pi[i] = j;
 
-    if d[r][c] != -1 :
-        return d[r][c];
+j = 0;
+count = 0;
+answer = [];
+for i in range(0, len(T)) :
+    while j > 0 and T[i] != P[j] :
+        j = pi[j - 1];
 
-    summ = 0;
-    for dir in range(4) :
-        nr = r + dr[dir];
-        nc = c + dc[dir];
-        if nr < 0 or nr >= n or nc < 0 or nc >= m :
-            continue;
-        if Board[nr][nc] < Board[r][c] :
-            summ += dfs(nr, nc);
+    if T[i] == P[j] :
+        if j == len(P) - 1 :
+            count += 1;
+            answer.append(i - len(P) + 2);
+            j = pi[j];
+        else :
+            j += 1;
 
-    d[r][c] = summ;
-    return d[r][c];
-
-print(dfs(0,0));
+print(count); #P가 T내에서 몇번 일치하는 구간이 나타나는지.
+print(*answer); #일치하는 구간이 나타날 때마다 그 구간의 시작점의 T 인덱스.
