@@ -2,37 +2,17 @@ import sys;
 input = sys.stdin.readline;
 
 n = int(input());
-lineInfo = [];
+
+graph = [[0] * 102 for _ in range(102)];
+d = [[0] * 102 for _ in range(102)];
+
 for _ in range(n) :
     s, e = map(int, input().split());
-    lineInfo.append((min(s, e), max(s, e)));
+    graph[s][e] = 1; graph[e][s] = 1;
 
-lineInfo.sort();
-print(lineInfo)
-d = [[-1] * 2 for _ in range(n)];
+for i in range(1, 101) :
+    for j in range(i, 0, -1) :
+        for k in range(j, i) :
+            d[j][i] = max(d[j][i], d[j][k] + d[k][i] + graph[j][i]);
 
-def dfs(idx, isContain) :
-    s, e = lineInfo[idx];
-
-    if idx == len(lineInfo) - 1 :
-        d[idx][isContain] = 0 if isContain == 0 else 1;
-        return d[idx][isContain];
-
-    if d[idx][isContain] != -1 :
-        return d[idx][isContain];
-
-    if isContain == 0 :
-        d[idx][isContain] = max(dfs(idx + 1, 0), dfs(idx + 1, 1));
-        return d[idx][isContain];
-    elif isContain == 1 :
-        maxCnt = 0;
-        for next in range(idx + 1, len(lineInfo)) :
-            nextS, nextE = lineInfo[next];
-            if nextE > e :
-                continue;
-            maxCnt = max(maxCnt, dfs(next, 1));
-        d[idx][isContain] = maxCnt + 1;
-        return d[idx][isContain];
-
-print(max(dfs(0, 0), dfs(0, 1)));
-print(d)
+print(d[1][100]);
