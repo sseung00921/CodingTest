@@ -3,48 +3,50 @@ input = sys.stdin.readline;
 
 n = int(input());
 Graph = [[] for _ in range(n + 1)];
+CalledCntForEachNode = [0] * (n + 1);
 for _ in range(n) :
     parent, left, right = map(int, input().split());
+    CalledCntForEachNode[parent] += 1;
+    CalledCntForEachNode[left] += 1;
+    CalledCntForEachNode[right] += 1;
     Graph[parent].append(left);
     Graph[parent].append(right);
 
-def dfsLeft(start) :
-    global LeftFromStartCnt;
+nodesInEachLevel = [[] for _ in range(10011)];
+def dfs(startNode, level, startCol) :
+    summUnder = 0;
+    leftNode = Graph[startNode][0];
+    rightNode = Graph[startNode][1];
 
-    LeftFromStartCnt += 1;
-    if Graph[start][0] == -1 :
-        return;
-    else :
-        dfsLeft(Graph[start][0]);
+    leftStartCol = startCol
+    if leftNode != -1 :
+        summUnder += dfs(leftNode, level + 1, leftStartCol) + 1;
+    rightStartCol = startCol + summUnder + 1;
+    thisNodeCol = startCol + summUnder;
+    if rightNode != -1 :
+        summUnder += dfs(rightNode, level + 1, rightStartCol) + 1;
 
-def dfsRight(start) :
-    global RightFromStartCnt;
+    nodesInEachLevel[level].append(thisNodeCol);
 
-    RightFromStartCnt += 1;
-    if Graph[start][1] == -1 :
-        return;
-    else :
-        dfsRight(Graph[start][1]);
+    return summUnder;
 
-LeftFromStartCnt = 0;
-RightFromStartCnt = 0;
-dfsLeft(1);
-dfsRight(1);
+root = -1;
+for i in range(1, n + 1) :
+    if CalledCntForEachNode[i] == 1 :
+        root = i;
 
-MinStartMaxEndForEachLevelList = [[] for _ in range(20)];
+dfs(root, 1, 1);
 
-for i in range(1, LeftFromStartCnt + 1) :
-    MinStartMaxEndForEachLevelList[LeftFromStartCnt + 1 - i].append(i);
-
-for i in range(1, RightFromStartCnt + 1) :
-    MinStartMaxEndForEachLevelList[RightFromStartCnt + 1 - i].append(n + 1 - i);
-
-answerLevel = -1;
-answerDist = -1;
-for i in range(len(MinStartMaxEndForEachLevelList)) :
-    if len(MinStartMaxEndForEachLevelList[i]) < 2 :
+answerLevel = 1;
+answerDist = 1;
+for i in range(1, 10011) :
+    if len(nodesInEachLevel[i]) < 2 :
         continue;
-    if answerDist < MinStartMaxEndForEachLevelList[i][1] - MinStartMaxEndForEachLevelList[i][0] + 1 :
+    mostLeft = min(nodesInEachLevel[i]);
+    mosrRight = max(nodesInEachLevel[i]);
+    thisDist = mosrRight - mostLeft + 1;
+    if answerDist < thisDist :
         answerLevel = i;
-        answerDist = MinStartMaxEndForEachLevelList[i][1] - MinStartMaxEndForEachLevelList[i][0] + 1;
-print(answerLevel, answerDist)
+        answerDist = thisDist;
+
+print(answerLevel, answerDist);
