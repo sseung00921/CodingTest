@@ -27,7 +27,7 @@ def calculate(targetMin) :
         if Summ < targetMin :
             PrevSum = Summ;
         elif Summ >= targetMin :
-            return i + 1, targetMin - PrevSum;
+            return Arr[-1], targetMin - PrevSum;
     return None, None;
 
 def bookMark(targetMin) :
@@ -38,9 +38,9 @@ def bookMark(targetMin) :
         PrevSum = 0;
         strHour = input();
         Arr.append(strHour);
-        idx, miniute = calculate(targetMin);
+        lastInput, miniute = calculate(targetMin);
         if Summ >= targetMin :
-            print(idx, miniute);
+            print(lastInput, miniute);
             break;
 
 targetMin = int(input());
