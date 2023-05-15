@@ -67,6 +67,9 @@ for _ in range(m) :
     RelationShips.append((a, b));
     union_parent(a, b);
 
+for i in range(1, len(Parents)) :
+    Parents[i] = find_parent(i);
+
 Graphs = [[[] for _ in range(n + 1)] for _ in range(n + 1)];
 Groups = [set() for _ in range(n + 1)];
 keySet = set(Parents[1 : ]);
