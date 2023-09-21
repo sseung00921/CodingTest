@@ -32,6 +32,5 @@ for i in range(N//2) :
                 CheckCrossArr[i] += 1;
                 CheckCrossArr[j] += 1;
 
-print(CheckCrossArr)
 print(sum(CheckCrossArr)//2);
 print(max(CheckCrossArr));
