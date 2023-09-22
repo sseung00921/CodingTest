@@ -23,3 +23,8 @@ Answer += dFull[K - 1] * dFull[N - K];
 for i in range(1, N + 1) :
     if i == K :
         continue;
+    if i == 1 :
+        Answer += dOneEmpty[K - 1] * dFull[N - K];
+    if i == N :
+        Answer += dFull[K - 1] * dOneEmpty[N - K];
+
